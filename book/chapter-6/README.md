@@ -1,6 +1,6 @@
 # คอมโพเนนต์สำหรับแสดงผล และ คอมโพเนนต์สำหรับจัดการข้อมูล
 
-ในการเริ่มต้นทุกๆอย่าง มักจะยากเสมอ. React ไม่มีการดักจับข้อผิดพลาด และเป็นผู้เริ่มต้น ดังนั้นพวกเราทุกคนต่างก็มีคำถามมากหมาย สิ่งที่ผมคิดก็คือผมจะเอาข้อมูลไปไว้ตรงไหน ซึ่งข้อมูลมันสือสารและเปลี่ยนแปลงยังไงละ แล้วะจัดการกับสถานะของข้อมูลยังไง The answers of these questions are very often a matter of context and sometimes just practice and experience with the library. However, there is a pattern which is used widely and helps organizing React based applications - splitting the component into presentation and container.
+ในการเริ่มต้นทุกๆอย่าง มักจะยากเสมอ. React ไม่มีการดักจับข้อผิดพลาด และในฐานะผู้เริ่มต้นพวกเราทุกคนต่างก็มีคำถามมากหมาย สิ่งที่ผมคิดก็คือผมจะเอาข้อมูลไปไว้ตรงไหน ซึ่งข้อมูลมันสือสารและเปลี่ยนแปลงยังไงละ แล้วะจัดการกับสถานะของข้อมูลยังไง The answers of these questions are very often a matter of context and sometimes just practice and experience with the library. However, there is a pattern which is used widely and helps organizing React based applications - splitting the component into presentation and container.
 
 Let's start with a simple example that illustrates the problem and then split the component into container and presentation. We will use a `Clock` component. It accepts a [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) object as a prop and displays the time in real time.
 
