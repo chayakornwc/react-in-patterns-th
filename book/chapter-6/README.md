@@ -2,7 +2,7 @@
 
 ในการเริ่มต้นทุกๆอย่าง มักจะยากเสมอ. React ไม่มีการดักจับข้อผิดพลาด และในฐานะผู้เริ่มต้นพวกเราทุกคนต่างก็มีคำถามมากหมาย สิ่งที่ผมคิดก็คือผมจะเอาข้อมูลไปไว้ตรงไหน ซึ่งข้อมูลมันสือสารหรือเปลี่ยนแปลงยังไงละ แล้วะจัดการกับสถานะของข้อมูลยังไง  คำถามเหล่านี้เป็นเรื่องสำคัญมากๆของบริบทหน้าที่ และในบางครั้งต้องอาศัยประสบการณ์และการฝึกในกับ React. อย่างไรก็ตาม, ยังมีรูปแบบถูกนำมาใช้อย่างแพร่หลาย และมันยังช่วงจัดระเบียบพื้นฐานแอพพลิเคชั่นจาก React  -  ไปจนถึงการแยกคอมโพเนนต์ ทั้ง คอมโพเนนต์สำหรับแสดงผล และ คอมโพเนนต์สำหรับจัดการข้อมูล.
 
-Let's start with a simple example that illustrates the problem and then split the component into container and presentation. We will use a `Clock` component. It accepts a [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) object as a prop and displays the time in real time.
+เรามาเริ่มต้นกับตัวอย่างง่ายๆซึ่งจะแสดงให้เห็นถึงปัญหาในการแยกคอมโพเนนต์ โดยพวกเราจะใช้ คอมโพเนนต์ชื่อว่า 'Clock' ซึ่งได้รับการตอบรับจาก วันที่ ที่อิงจาก [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) ซึ่งเป็นวัตุที่เป็นทั้ง prop และตัวแสดงผล ของเวลาแบบเรียลไทม์
 
 ```js
 class Clock extends React.Component {
