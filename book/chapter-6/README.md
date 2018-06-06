@@ -2,7 +2,7 @@
 
 ในการเริ่มต้นทุกๆอย่าง มักจะยากเสมอ. React ไม่มีการดักจับข้อผิดพลาด และในฐานะผู้เริ่มต้นพวกเราทุกคนต่างก็มีคำถามมากหมาย สิ่งที่ผมคิดก็คือผมจะเอาข้อมูลไปไว้ตรงไหน ซึ่งข้อมูลมันสือสารหรือเปลี่ยนแปลงยังไงละ แล้วะจัดการกับสถานะของข้อมูลยังไง  คำถามเหล่านี้เป็นเรื่องสำคัญมากๆของบริบทหน้าที่ และในบางครั้งต้องอาศัยประสบการณ์และการฝึกในกับ React. อย่างไรก็ตาม, ยังมีรูปแบบถูกนำมาใช้อย่างแพร่หลาย และมันยังช่วงจัดระเบียบพื้นฐานแอพพลิเคชั่นจาก React  -  ไปจนถึงการแยกคอมโพเนนต์ ทั้ง คอมโพเนนต์สำหรับแสดงผล และ คอมโพเนนต์สำหรับจัดการข้อมูล.
 
-เรามาเริ่มต้นกับตัวอย่างง่ายๆซึ่งจะแสดงให้เห็นถึงปัญหาในการแยกคอมโพเนนต์ โดยพวกเราจะใช้ คอมโพเนนต์ชื่อว่า 'Clock' ซึ่งได้รับการตอบรับจาก วันที่ ที่อิงจาก [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) ซึ่งเป็นวัตุที่เป็นทั้ง prop และตัวแสดงผล ของเวลาแบบเรียลไทม์
+เรามาเริ่มต้นกับตัวอย่างง่ายๆซึ่งจะแสดงให้เห็นถึงปัญหาในการแยกคอมโพเนนต์ โดยพวกเราจะใช้ คอมโพเนนต์ชื่อว่า 'Clock' ซึ่งได้รับการยอมรับ  [วันที่](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) ซึ่งเป็นวัตุที่เป็นทั้ง prop และตัวแสดงผล ของเวลาแบบเรียลไทม์
 
 ```js
 class Clock extends React.Component {
@@ -43,14 +43,15 @@ class Clock extends React.Component {
 
 ReactDOM.render(<Clock time={ new Date() }/>, ...);
 ```
+ใน constructor ของคอมโพเนนต์นั้นพวกเราได้เริ่มต้น คอมโพเนนต์ state ซึ่งในกรณีนี้ เป็นเพียงแค่ค่า'time'(เวลา)ในปัจจุบัน โดยใช้ 'setInterval' พวกเราได้อัพเดท state ทุกๆวินาที และคอมโพเนนนั้นมีการรีเรนเดอร์ด้วย เพื่อให้ดูเหมือนนาฬิกาจริง เพื่อให้ดูเหมือนนาฬิกาจริง พวกเราได้ใช้ ตัวช่วย 2 method คือ `_formatTime` และ `_UpdateTime`. 
+อันดับแรกคือการแยกองค์ประกอบ ชั่วโมง นาที และวินาที และเพื่อที่จะแน่ใจกับมันต้องติดตามรูปแบบตัวเลข 2หลัก  
+`_updateTime` คือการทำให้ วัตถุเวลา`time`เป็นปัจุบัน ในทุกๆ 1วินาที
+ 
+## ปัญหาที่เกิดขึ้น
+ทั้งสองคอมโพเนนต์ของเรา ดูเหมือนจะมีภาระหน้าที่ที่มากเกินไป
 
-In the constructor of the component we initialize the component's state which in our case is just the current `time` value. By using `setInterval` we update the state every second and the component is re-rendered. To make it looks like a real clock we use two helper methods - `_formatTime` and `_updateTime`. The first one is about extracting hours, minutes and seconds and making sure that they are following the two-digits format. `_updateTime` is mutating the current `time` object by one second.
+* มันอัพเดท state ของมันด้วยตัวมันเอง การเปลี่ยนแปลงเวลาภายในคอมโพเนนตค์นั้น อาจจะไม่ใช่ความคิดที่ดีเพราะว่า เมื่อ `Clock` มันจะรู้แค่ค่าปัจุบันของมันเท่านั้น อ้าวแล้วถ้ามีส่วนอื่นของระบบซึ่งมันขึ้นอยู่กับข้อมูลที่ซึ่งมันยากที่จะแชร์กันละ 
 
-## The problems
-
-There are couple of things happening in our component. It looks like it has too many responsibilities.
-
-* It mutates the state by itself. Changing the time inside the component may not be a good idea because then only `Clock` knows the current value. If there is another part of the system that depends on this data it will be difficult to share it.
 * `_formatTime` is actually doing two things - it extracts the needed information from the date object and makes sure that the values are always presented by two digits. That's fine but it will be nice if the extracting is not part of the function because then it is bound to the type of the `time` object (coming as a prop). I.e. knows specifics about the shape of the data and at the same time deals with the visualization of it.
 
 ## Extracting the container
