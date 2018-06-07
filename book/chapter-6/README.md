@@ -1,6 +1,6 @@
-# คอมโพเนนต์สำหรับแสดงผล และ คอมโพเนนต์สำหรับจัดการข้อมูล
+# Presentational component และ Container component
 
-ในการเริ่มต้นทุกๆอย่าง มักจะยากเสมอ. React ไม่มีการดักจับข้อผิดพลาด และในฐานะผู้เริ่มต้นพวกเราทุกคนต่างก็มีคำถามมากหมาย สิ่งที่ผมคิดก็คือผมจะเอาข้อมูลไปไว้ตรงไหน ซึ่งข้อมูลมันสือสารหรือเปลี่ยนแปลงยังไงละ แล้วะจัดการกับสถานะของข้อมูลยังไง  คำถามเหล่านี้เป็นเรื่องสำคัญมากๆของบริบทหน้าที่ และในบางครั้งต้องอาศัยประสบการณ์และการฝึกในกับ React. อย่างไรก็ตาม, ยังมีรูปแบบถูกนำมาใช้อย่างแพร่หลาย และมันยังช่วงจัดระเบียบพื้นฐานแอพพลิเคชั่นจาก React  -  ไปจนถึงการแยกคอมโพเนนต์ ทั้ง คอมโพเนนต์สำหรับแสดงผล และ คอมโพเนนต์สำหรับจัดการข้อมูล.
+ในการเริ่มต้นทุกๆอย่าง มักจะยากเสมอ. React เองนั้น ไม่มีการดักจับข้อผิดพลาด และในฐานะผู้เริ่มต้นพวกเราทุกคนต่างก็มีคำถามมากหมาย สิ่งที่ผมคิดก็คือผมจะเอาข้อมูลไปไว้ตรงไหน ซึ่งข้อมูลมันสือสารหรือเปลี่ยนแปลงยังไงละ แล้วะจัดการกับสถานะของข้อมูลยังไง  คำถามเหล่านี้เป็นเรื่องสำคัญมากๆของบริบทหน้าที่ และในบางครั้งต้องอาศัยประสบการณ์และการฝึกในกับ React. อย่างไรก็ตาม, ยังมีรูปแบบถูกนำมาใช้อย่างแพร่หลาย และมันยังช่วงจัดระเบียบพื้นฐานแอพพลิเคชั่นจาก React  -  ไปจนถึงการแยกคอมโพเนนต์ ทั้ง คอมโพเนนต์สำหรับแสดงผล และ คอมโพเนนต์สำหรับจัดการข้อมูล.
 
 เรามาเริ่มต้นกับตัวอย่างง่ายๆซึ่งจะแสดงให้เห็นถึงปัญหาในการแยกคอมโพเนนต์ โดยพวกเราจะใช้ คอมโพเนนต์ชื่อว่า 'Clock' ซึ่งได้รับการยอมรับ  [วันที่](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) ซึ่งเป็นวัตุที่เป็นทั้ง prop และตัวแสดงผล ของเวลาแบบเรียลไทม์
 
@@ -51,14 +51,16 @@ ReactDOM.render(<Clock time={ new Date() }/>, ...);
 ทั้งสองคอมโพเนนต์ของเรา ดูเหมือนจะมีภาระหน้าที่ที่มากเกินไป
 
 * มันอัพเดท state ของมันด้วยตัวมันเอง การเปลี่ยนแปลงเวลาภายในคอมโพเนนตค์นั้น อาจจะไม่ใช่ความคิดที่ดีเพราะว่า เมื่อ `Clock` มันจะรู้แค่ค่าปัจุบันของมันเท่านั้น อ้าวแล้วถ้ามีส่วนอื่นของระบบซึ่งมันขึ้นอยู่กับข้อมูลที่ซึ่งมันยากที่จะแชร์กันละ 
+* `_formatTime` เป็น สองอย่างที่ต้องการ การแตกย่อยของข้อมูล จาก data object และเพื่อให้แน่ใจว่ามันจะมีค่าตัวเลขสองหลักที่จะแสดงผลออกมาเสมอ
+อย่างไรก็ตาม เรายังสามารถที่จะแตกย่อยส่วนที่เป็นฟังก์ชั่นได้ดี เพราะเมื่อมันสัมพันธ์กับชนิดของ  object `time`  จาก object `date` มาเป็น property ซึ่งเป็นที่รู้จักในนามของ ความเฉพาะของข้อมูล และในบางเวลา มันก็เป็นที่รู้จักในนามของการจำลองภาพ
 
-* `_formatTime` is actually doing two things - it extracts the needed information from the date object and makes sure that the values are always presented by two digits. That's fine but it will be nice if the extracting is not part of the function because then it is bound to the type of the `time` object (coming as a prop). I.e. knows specifics about the shape of the data and at the same time deals with the visualization of it.
 
-## Extracting the container
+## การแยกส่วนย่อยของ container
 
-Containers know about data, its shape and where it comes from. They know details about how the things work or the so called *business logic*. They receive information and format it so like is easy to be used by the presentational component. Very often we use [higher-order components](https://github.com/krasimir/react-in-patterns/tree/master/patterns/higher-order-components) to create containers because they provide a buffer space where we can insert custom logic.
+Containers หรือเป็นที่รู้จักในนามข้อมูลซึ่งมีรูปร่างและที่มา ซึ่งหลายคนคงทราบถึงรายละเอียดและการทำงานของมัน หรือจะเรียกอีกอย่างว่า bussiness logic   ซึ่งมันได้รับ รูปแบบและข้อมูลที่ดูเหมือนง่ายโดยการใช้ presentational component, พวกเราได้ใช้ [higher-order components]  (https://github.com/krasimir/react-in-patterns/tree/master/patterns/higher-order-components) ในการสร้าง container บ่อยมากเพราะมันให้พื้นที่ buffer ซึ่งเราจะสามารถเพิ่มการจัดการข้อมูลด้วยตัวเองได้  
 
-Here's how our `ClockContainer` looks like:
+
+นี่คือ `ClockContainer` ลองดูที่:
 
 <span class="new-page"></span>
 
@@ -95,14 +97,14 @@ export default class ClockContainer extends React.Component {
   }
 };
 ```
+มันยังคงรับ `เวลา` (date object)   รายละเอียดของข้อมูลที่เป็นเวลา (`getHours`, `getMinutes` และ `getSeconds`) จาก ลูป setInterval  ในตอนการจบการrender presentational component  จะส่งผ่านตัวเลข 3 ตัวก็คือ ชั่วโมง นาที และวินาที มันดูเหมือนจะไม่มีมีอะไรเกิดขึ้นนะในการมองหาเพียงแค่ `bussiness logic` เท่านั้น
 
-It still accepts `time` (a date object), does the `setInterval` loop and knows details about the data (`getHours`, `getMinutes` and `getSeconds`). In the end renders the presentational component and passes three numbers for hours, minutes and seconds. There is nothing about how the things look like. Only *business logic*.
+
 
 ## Presentational component
+Presentational Components เป็นสิ่งที่ดูน่าสนใจ มันยังต้องการmarkup เพิ่มเติม ในการทำให้ เพจต่างๆดูสวยงาม ยกตัวอย่าง component ต่างๆที่ไม่ได้มีความสัมพันธ์กับอะไรก็ตามและยังไม่ได้เกี่ยวข้องกับ dependencies ใดๆ บ่อบครั้งมากที่ต้องมีการดำเนินการกับมัน ในฐานนะ [stateless functional components](https://facebook.github.io/react/blog/2015/10/07/react-v0.14.html#stateless-functional-components) ซึ่งมันไม่ได้มี state ภายในของมันเอง
 
-Presentational components are concerned with how the things look. They have the additional markup needed for making the page pretty. Such components are not bound to anything and have no dependencies. Very often implemented as a [stateless functional components](https://facebook.github.io/react/blog/2015/10/07/react-v0.14.html#stateless-functional-components) they don't have internal state.
-
-In our case the presentational component contains only the two-digits check and returns the `<h1>` tag:
+ในกรณีของเรา มีแค่ presentational component เท่านั้น ซึ่งมีการตรวจสอบตัวเลขสองหลัก ละ return ออกมา ใน tag `<h1>` 
 
 ```js
 // Clock/Clock.jsx
@@ -117,14 +119,16 @@ export default function Clock(props) {
 };
 ```
 
-## Benefits
 
-Splitting the components in containers and presentation increases the reusability of the components. Our `Clock` function/component may exist in application that doesn't change the time or it's not working with JavaScript's [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) object. That's because it is pretty *dummy*. No details about the data are required.
+##  ประโยชน์ที่ได้รับ
+การแยก  component ต่างๆนั้น ทั้งใน container component และ presentation component และการใช้นำคอมโพเนนต์ มา reuse บ่อยๆนั้น 
+  ยกตัวอย่างของเรา `Clock` คือฟังก์ชั่นหรือคอมโพเนนต์ในเวลาเดียวกัน อาจจะมีมีอยู่ใน application ซึ่งมันไม่เปลี่ยนแปลงเวลา หรือไม่ทำงานด้วย Oject [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) ใน Javascirpt เพราะว่ามันคือ *dummy*ที่สวยงาม และไม่มีรายละเอียดเกี่ยวกับข้อมูลที่จำเป็น
+  
+Container ต่างๆ ที่ encapsulate logic และำวกเรา อาจจะใช้มันร่วมกันซึ่งมันยากต่อการ render ออกมา เพราะข้อมูลมันไม่มีจุดรั่วเกี่ยวกับส่วนจำลอง, การที่พวกพเราจะยอมรับมัน คือการที่นำมาเป็นตัวอย่างที่ดี ของการใช้ container โดยไม่สนใจว่ามันจะมีลักษณะต่างๆยังไง เราหวังว่ามันจะเปลี่ยนจาก นาฬิกาดิติตอลไปเป็น นาฬิกาอนาล็อก อย่างง่ายดายเพียงเท่านั้นมันยังจะถูกที่แทนด้วย Components `Clock` ใน method `render`
 
-The containers encapsulate logic and we may use them together with different renderers because they don't leak information about the visual part. The approach that we took above is a good example of how the container doesn't care about how the things look like. We may easily switch from digital to analog clock and the only one change will be to replace the `<Clock>` component in the `render` method.
+แม้แต่การทดสอบยังสามารถที่ทำได้ง่ายขึ้น components ต่างๆยังมีหน้าที่ที่น้อยลง หรือไม่มีเลย อีกทั้งยังไม่จำเป็นต้องกังวลกับเรื่อง UI
+Presentational component ต่างๆนั้นมีการ renders สิ่งต่างๆออกมาได้อย่างดิบๆ และ ยังเราเดาถึงผลของการออกแบบหน้าตา
 
-Even the testing becomes easier because the components have less responsibilities. Containers are not concern with UI. Presentational components are pure renderers and it is enough to run expectations on the resulted markup.
-
-## Final thoughts
-
-The concept of container and presentation is not new at all but it fits really nicely with React. It makes our applications better structured, easy to manage and scale.
+## ความคิดสุดท้าย
+แนวคิดสุดท้าย ของ container และ presentation นั้น ไม่ใช่เรื่องใหม่ แต่ทุกอย่างเป็นเรื่อง แต่มันเหมาะกับ React จริงๆ ซึ่งมันสามารถสร้างโครงสร้าง
+Application ของเราให้ดีขึ้นีกทั้งยังมาสามารถจัดการ และ ปรับปรุงขอบเขตได้ง่าย
