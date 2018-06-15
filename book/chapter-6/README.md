@@ -102,7 +102,7 @@ export default class ClockContainer extends React.Component {
 
 
 ## Presentational component
-Presentational Component เป็นสิ่งที่ดูน่าสนใจ มันยังต้องการ ปรับแต่งเพิ่มเติมในการทำให้ หน้าต่าง ๆ ดูสวยงาม ยกตัวอย่าง Component ต่าง ๆ ที่ไม่ได้มีความสัมพันธ์กับสิ่งใด ๆ ก็ตามและยังไม่ได้เกี่ยวข้องกับ dependencies ใด ๆ บ่อยครั้งมากที่ต้องมีการดำเนินการกับมัน ในฐานนะ [stateless functional components](https://facebook.github.io/react/blog/2015/10/07/react-v0.14.html#stateless-functional-components) ซึ่งมันไม่ได้มี state ภายในของมันเอง
+Presentational Component เป็นสิ่งที่ดูน่าสนใจ มันยังต้องการการปรับแต่งเพิ่มเติมในการทำให้หน้าต่าง ๆ ดูสวยงามยกตัวอย่าง Component ต่าง ๆ ที่ไม่ได้มีความสัมพันธ์กับสิ่งใด ๆ ก็ตามและยังไม่ได้เกี่ยวข้องกับ dependencies ใด ๆ บ่อยครั้งมากที่ต้องมีการดำเนินการกับมัน ในฐานนะ [stateless functional components](https://facebook.github.io/react/blog/2015/10/07/react-v0.14.html#stateless-functional-components) ซึ่งมันไม่ได้มี state ภายในของมันเอง
 
 ในกรณีของเรา มีแค่ Presentational component เท่านั้น ซึ่งมีการตรวจสอบตัวเลขสองหลัก ละ return ออกมา ใน tag `<h1>` 
 
@@ -120,8 +120,8 @@ export default function Clock(props) {
 ```
 
 
-##  ประโยชน์ที่ได้รับ
-การแยก  component ต่าง ๆ นั้น ทั้งใน container component และ presentation component และนำ Component มาใช้อีกครั้งบ่อย ๆ นั้น 
+## ประโยชน์ที่ได้รับ
+การแยก component ต่าง ๆ นั้น ทั้งใน container component และ presentation component และนำ Component มาใช้อีกครั้งบ่อย ๆ นั้น 
   ยกตัวอย่างของเรา `Clock` คือฟังก์ชั่นหรือ Component ในเวลาเดียวกัน อาจจะมีมีอยู่ใน application ซึ่งมันไม่เปลี่ยนแปลงเวลา หรือไม่ทำงานด้วย Oject [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) ใน Javascirpt เพราะว่ามันคือ *dummy*ที่สวยงาม และไม่มีรายละเอียดเกี่ยวกับข้อมูลที่จำเป็น
   
 Container ต่าง ๆ ที่ encapsulate logic และเราอาจจะใช้มันร่วมกันซึ่งมันยากต่อการ render ออกมา เพราะข้อมูลมันไม่มีจุดรั่วเกี่ยวกับส่วนจำลอง, การที่นำมายกตัวอย่างที่ดี ของการใช้ container โดยไม่สนใจว่ามันจะมีลักษณะต่าง ๆ ยังไง เราหวังว่ามันจะเปลี่ยนจาก นาฬิกาดิติตอลไปเป็น นาฬิกาอนาล็อก อย่างง่ายดายเพียงเท่านั้นมันยังจะถูกที่แทนด้วย Component `Clock` ใน method `render`
